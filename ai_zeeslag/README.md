@@ -38,3 +38,9 @@ for example:
 ```
 
 Every round the AI gets a chance to discover more of the players behaviors.
+
+## Usefull Algorithms
+**MiniMax with pruning**
+
+## AI-thinking Visibility
+Visualize the confidence using collors, on the grid as the game goes allong.
