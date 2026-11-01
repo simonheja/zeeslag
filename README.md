@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="images/Vives_logo.png">
+</p>
+
 # zeeslag
 Project AI Programming: zeeslag
 
