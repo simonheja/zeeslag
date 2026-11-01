@@ -44,3 +44,7 @@ Every round the AI gets a chance to discover more of the players behaviors.
 
 ## AI-thinking Visibility
 Visualize the confidence using collors, on the grid as the game goes allong.
+
+Something like the following:
+
+<img src="./images/confidence_matrix.png">
