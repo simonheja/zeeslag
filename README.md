@@ -10,6 +10,33 @@ Project AI Programming: zeeslag
 - ***[Simon Moyaert](https://github.com/simonheja)***
 - ***[Miel Villyn](https://github.com/Miel-VIllyn)***
 
+
+# Inhoud
+
+- [Doelstellingen](#doelstellingen)
+- [Probleemstelling](#probleemstelling)
+- [Analyse](#analyse)
+- [Resultaten](#resultaten)
+- [Uitbreiding](#uitbreiding)
+- [Conclusie](#conclusie)
+- [Bibliografie](#bibliografie)
+- [Taakverdeling](#taakverdeling)
+
+
+## Doelstellingen
+
+## Probleemstelling
+
+## Analyse
+
+## Resultaten
+
+## Uitbreiding
+
+## Conclusie
+
+## Bibliografie
+
 ## Taakverdeling
 | Groepslid | Taak | Datum |
 | --- | --- | --- |
