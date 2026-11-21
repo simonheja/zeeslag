@@ -50,6 +50,6 @@ Project AI Programming: zeeslag
 | Groepslid | Commit-hash | Branch | Mededeling |
 | --- | --- | --- | --- |
 | [Miel-Villyn](https://github.com/Miel-VIllyn) | [809bb41d4705959d15a91e1947b5de75ef84fc56](https://github.com/simonheja/zeeslag/tree/809bb41d4705959d15a91e1947b5de75ef84fc56) | `main` | Refactor door claude + default AI |
-| [Miel-Villyn](https://github.com/Miel-VIllyn) | [43e934a7c3aaa6849b3ce221ce83121a31be2f77](https://github.com/simonheja/zeeslag/tree/43e934a7c3aaa6849b3ce221ce83121a31be2f77) | `menu-window` | Menu window boilerplate code |
+| [Miel-Villyn](https://github.com/Miel-VIllyn) | [0cf378b03e06f8174b02847d470b4ee51f44689d](https://github.com/simonheja/zeeslag/tree/0cf378b03e06f8174b02847d470b4ee51f44689d) | `menu-window` | Menu window code |
 
 ---
