@@ -31,6 +31,7 @@ from app.gui.ui_helpers import (
     COLOR_VALID,
     COLOR_WATER,
     COLOR_WATER_HOVER,
+    COLOR_BACKGROUND,
     PLAYER_WINDOW_SIZE,
     WINDOW_MARGIN,
     BoardLayout,
@@ -209,7 +210,7 @@ class PlayerWindow:
         if self._background is not None:
             self._screen.blit(self._background, (0, 0))
         else:
-            self._screen.fill((12, 24, 40))
+            self._screen.fill(COLOR_BACKGROUND)
         self._refresh_buttons()
         mouse = pygame.mouse.get_pos()
 

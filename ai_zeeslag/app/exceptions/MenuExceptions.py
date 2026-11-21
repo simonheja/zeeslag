@@ -1,0 +1,1 @@
+class InvalidDifficulty(Exception): pass

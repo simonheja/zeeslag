@@ -27,6 +27,8 @@ Project AI Programming: zeeslag
 
 ## Probleemstelling
 
+> Python 3.12 is verplicht, en is ook de meest stabile versie om dit op iedere OS te draaien.
+
 ## Analyse
 
 ## Resultaten
