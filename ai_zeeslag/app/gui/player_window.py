@@ -75,6 +75,9 @@ class PlayerWindow:
 
     def __init__(self, game: Game, send_debug: DebugSender | None = None) -> None:
         self._game = game
+
+        # 'lambda message: None' creates an anonymous micro function that always retruns None when it is called
+        # allows the user to submit their own function, otherwise prevent the code from crashing
         self._send_debug = send_debug or (lambda message: None)
         self._screen: pygame.Surface
         self._background: pygame.Surface | None = None

@@ -24,6 +24,7 @@ BACKGROUND_PATH: Path = ASSETS_DIR / "images" / "bg.jpg"
 # ---------------------------------------------------------------------- #
 PLAYER_WINDOW_SIZE: Point = (1020, 700)
 DEBUG_WINDOW_SIZE: Point = (820, 760)
+MENU_WINDOW_SIZE: Point = (820, 760)
 WINDOW_MARGIN: int = 20
 
 # ---------------------------------------------------------------------- #
