@@ -15,6 +15,7 @@ from app.gui.ui_helpers import (
     MENU_WINDOW_SIZE,
     WINDOW_MARGIN,
     BoardLayout,
+    Buttons,
     Button,
     body_font,
     draw_board_labels,
@@ -30,11 +31,14 @@ from app.data.game_init_data import (
     MenuState,
     GameSettings
 )
-
 from app.exceptions.MenuExceptions import (
     InvalidDifficulty
 )
+from app.game_logic.open_functions import (
+    ShipSpec
+)
 
+# Set FPS cap to 60
 FPS = 60
 
 BUTTON_WIDTH = 190
@@ -61,13 +65,49 @@ class MenuWindow:
                 Difficulty.HARD: Button(pygame.Rect(400-BUTTON_WIDTH/2, 160, BUTTON_WIDTH, BUTTON_HEIGHT), "Hard"),
                 Difficulty.EXPERT: Button(pygame.Rect(400-BUTTON_WIDTH/2, 210, BUTTON_WIDTH, BUTTON_HEIGHT), "Expert")
             },
-            "back": {
-                "difficulty": Button(pygame.Rect(100-BUTTON_WIDTH/2, 400, BUTTON_WIDTH, BUTTON_HEIGHT), "<< Difficulty")
-            },
-            "continue": {
-                "start": Button(pygame.Rect(720-BUTTON_WIDTH/2, 400, BUTTON_WIDTH, BUTTON_HEIGHT), "Start Game")
+            "ships": {
+                "count_up": Button(pygame.Rect(30, 30, 30, 30), "^"),
+                "count_down": Button(pygame.Rect(30, 60, 30, 30), "v"),
+                "back": Button(pygame.Rect(100-BUTTON_WIDTH/2, 400, BUTTON_WIDTH, BUTTON_HEIGHT), "<< Difficulty"),
+                "continue": Button(pygame.Rect(720-BUTTON_WIDTH/2, 400, BUTTON_WIDTH, BUTTON_HEIGHT), "Start Game")
             }
         }
+
+        self.button_event_handler = Buttons()
+        self.initialize_buttons()
+
+    def initialize_buttons(self):
+        @self.button_event_handler.button_event(self._buttons["difficulty-select"][Difficulty.EASY])
+        def set_dificulty_easy():
+            self._update_difficulty(Difficulty.EASY)
+
+        @self.button_event_handler.button_event(self._buttons["difficulty-select"][Difficulty.NORMAL])
+        def set_dificulty_normal():
+            self._update_difficulty(Difficulty.NORMAL)
+
+        @self.button_event_handler.button_event(self._buttons["difficulty-select"][Difficulty.HARD])
+        def set_dificulty_hard():
+            self._update_difficulty(Difficulty.HARD)
+
+        @self.button_event_handler.button_event(self._buttons["difficulty-select"][Difficulty.EXPERT])
+        def set_dificulty_expert():
+            self._update_difficulty(Difficulty.EXPERT)
+
+        @self.button_event_handler.button_event(self._buttons["ships"]["back"])
+        def reset_difficulty():
+            self._update_difficulty(None)
+
+        @self.button_event_handler.button_event(self._buttons["ships"]["continue"])
+        def start_game():
+            self._running = False
+
+        @self.button_event_handler.button_event(self._buttons["ships"]["count_up"])
+        def add_ship():
+            self._state.add_ship(ShipSpec("Destroyer", 5))
+
+        @self.button_event_handler.button_event(self._buttons["ships"]["count_down"])
+        def remove_ship():
+            self._state.remove_ship()
 
     @property
     def state(self) -> GameSettings|None:
@@ -75,7 +115,7 @@ class MenuWindow:
             return GameSettings(
                 self._state.selected_dificutly,
                 Available_AI.DEFAULT,
-                self._state.boat_config
+                self._state.ship_config
             )
 
     def start(self):
@@ -86,13 +126,25 @@ class MenuWindow:
             start = time.perf_counter()
             for event in pygame.event.get():
                 self.handle_event(event)
+
+            # Call update event
             self.update()
+
+            # Update changes in the buffer
             self.draw()
+
+            # Display all applied changes to the screen
             pygame.display.flip()
+
+            # Limit FPS to set FPS cap
             clock.tick(FPS)
+
+            # Do a calculation on the amount of time it took to render the current frame
+            # AKA. 'DeltaTime'
             stop = time.perf_counter()
             self._delta_time = stop-start
 
+        # UnInitialize pygame for clean shutdown
         pygame.quit()
         return self
 
@@ -109,17 +161,7 @@ class MenuWindow:
             self.killed = True
 
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            # Check buttons
-            for mode, button in self._buttons["difficulty-select"].items():
-                if button.contains(event.pos):
-                    self._update_difficulty(mode)
-
-            for button in self._buttons["back"].values():
-                if button.contains(event.pos):
-                    self._update_difficulty(None)
-
-            if self._buttons["continue"]["start"].contains(event.pos):
-                self._running = False
+            self.button_event_handler.handle_button_events(event.pos)
 
     def _update_difficulty(self, difficulty:str|None) -> None:
         if difficulty is None:
@@ -148,6 +190,9 @@ class MenuWindow:
     # Drawing
     # ------------------------------------------------------------------ #
     def draw(self) -> None:
+        """
+        Draw updates
+        """
         if self._background is not None:
             self._screen.blit(self._background, (0, 0))
         else:
@@ -162,14 +207,18 @@ class MenuWindow:
         draw_text(self._screen, f"Selected difficulty: {self._state.selected_dificutly}", title_font(40), COLOR_TEXT_DIM, (400, 25))
         draw_text(self._screen, f"x: {mouse[0]} y: {mouse[1]}", title_font(16), COLOR_HIT, (760, 440))
 
+        if self._state.selected_dificutly:
+            draw_text(self._screen, f"Amount of ships: {self._state.ship_count}", title_font(16), COLOR_VALID, (200, 60))
+
     def _refresh_buttons(self, mouse:tuple[int,int]) -> None:
         state = self._state
         if state.selected_dificutly is None:
             for button in self._buttons["difficulty-select"].values():
                 button.draw(self._screen, mouse)
-        elif True: # Tempory, no further checks yet
-            self._buttons["back"]["difficulty"].draw(self._screen, mouse)
-            self._buttons["continue"]["start"].draw(self._screen, mouse)
+        elif state.selected_dificutly and True: # Tempory, no further checks yet
+            for button in self._buttons["ships"].values():
+                button.draw(self._screen, mouse)
+
 
 if __name__ == "__main__":
     menu = MenuWindow().start()

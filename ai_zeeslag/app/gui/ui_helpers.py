@@ -4,6 +4,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
+from collections.abc import Callable
+from typing import Any
 
 import pygame
 
@@ -125,6 +127,32 @@ def draw_panel(surface: pygame.Surface, rect: pygame.Rect, alpha: int = 185) -> 
     pygame.draw.rect(panel, (*COLOR_PANEL, alpha), panel.get_rect(), border_radius=10)
     surface.blit(panel, rect.topleft)
 
+class Buttons:
+    """
+    event handler for all buttons, use function decorator to
+    add buttons to the event queue and run them each frame.
+
+    Event queue calls .on_click() function of a button.
+    """
+    def __init__(self) -> None:
+        self._buttons: list[Button] = []
+
+    def button_event(self, button:Button) -> Callable[[Callable[[], None]], Callable[[], None]]:
+        """
+        accepts a fully initialized Button object
+        """
+        def decorator(callback: Callable[[], None]) -> Callable[[], None]:
+            button.callback = callback
+            self._buttons.append(button)
+            return callback
+
+        return decorator
+
+    def handle_button_events(self, mouse:tuple[int, int]):
+        for button in self._buttons:
+            if button.contains(mouse):
+                button.on_click()
+
 
 @dataclass
 class Button:
@@ -132,6 +160,7 @@ class Button:
 
     rect: pygame.Rect
     label: str
+    callback: Callable|None = None
     enabled: bool = True
 
     def contains(self, position: Point) -> bool:
@@ -146,6 +175,10 @@ class Button:
             color, text_color = COLOR_BUTTON, COLOR_TEXT
         pygame.draw.rect(surface, color, self.rect, border_radius=8)
         draw_text(surface, self.label, title_font(22), text_color, self.rect.center)
+
+    def on_click(self):
+        if self.callback:
+            self.callback()
 
 
 @dataclass(frozen=True)
