@@ -5,11 +5,16 @@ from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 from collections.abc import Callable
-from typing import Any
+from typing import Any, Literal
 
 import pygame
+pygame.font.init()
 
 from app.game_logic.open_functions import BOARD_SIZE, Coordinate
+
+from app.exceptions.MenuExceptions import (
+    InvalidCountState
+)
 
 Color = tuple[int, int, int]
 Point = tuple[int, int]
@@ -36,6 +41,8 @@ COLOR_BACKGROUND: Color = (12, 24, 40)
 COLOR_PANEL: Color = (8, 16, 28)
 COLOR_TEXT: Color = (232, 238, 245)
 COLOR_TEXT_DIM: Color = (150, 165, 182)
+COLOR_TEXT_ORANGE: Color = (255, 128, 0)
+COLOR_TEXT_BLACK: Color = (0, 0, 0)
 COLOR_ACCENT: Color = (240, 190, 70)
 COLOR_WATER: Color = (28, 70, 116)
 COLOR_WATER_HOVER: Color = (52, 110, 168)
@@ -104,7 +111,6 @@ def draw_text(
     surface.blit(image, rect)
     return rect
 
-
 def wrap_text(text: str, font: pygame.font.Font, max_width: int) -> list[str]:
     """Split ``text`` into lines that fit in ``max_width`` pixels."""
     lines: list[str] = []
@@ -127,7 +133,7 @@ def draw_panel(surface: pygame.Surface, rect: pygame.Rect, alpha: int = 185) -> 
     pygame.draw.rect(panel, (*COLOR_PANEL, alpha), panel.get_rect(), border_radius=10)
     surface.blit(panel, rect.topleft)
 
-class Buttons:
+class Button_Event_Handler:
     """
     event handler for all buttons, use function decorator to
     add buttons to the event queue and run them each frame.
@@ -160,6 +166,7 @@ class Button:
 
     rect: pygame.Rect
     label: str
+    radius:int = 8
     callback: Callable|None = None
     enabled: bool = True
 
@@ -173,12 +180,94 @@ class Button:
             color, text_color = COLOR_BUTTON_HOVER, COLOR_TEXT
         else:
             color, text_color = COLOR_BUTTON, COLOR_TEXT
-        pygame.draw.rect(surface, color, self.rect, border_radius=8)
+        pygame.draw.rect(surface, color, self.rect, border_radius=self.radius)
         draw_text(surface, self.label, title_font(22), text_color, self.rect.center)
 
     def on_click(self):
         if self.callback:
             self.callback()
+
+@dataclass
+class Spinbox:
+    """
+    Draw a spinbox in one function, this includes it's 2 buttons being funcional
+    """
+    rect: pygame.Rect # Base outline
+    event_handler: Button_Event_Handler
+    standard_text: str
+    background_color: Color
+    button_color: Color
+    text_color: Color = (0, 0, 0)
+    font: pygame.font.Font = mono_font(10)
+    min:int = 0
+    max:int = 10
+    button_width:int = 10
+    button_custom_text: tuple[str, str] = ("", "")
+    enabled: bool = True
+    _count:int = 0    
+
+    def init_button_events(self):
+        button_shape = pygame.Rect(0,0,self.button_width, self.rect.h/2)
+        button_x_placement = self.rect.x + self.rect.w - self.button_width
+        self.button_count_up: Button = Button(button_shape.move(button_x_placement, self.rect.y), self.button_custom_text[0])
+        self.button_count_down: Button = Button(button_shape.move(button_x_placement, self.rect.y + self.rect.h/2), self.button_custom_text[1])
+
+
+        @self.event_handler.button_event(self.button_count_up)
+        def count_up():
+            self.__update_count("up")
+
+        @self.event_handler.button_event(self.button_count_down)
+        def count_down():
+            self.__update_count("down")
+
+    @property
+    def count(self):
+        return self._count
+    
+    def __update_count(self, pos:Literal["up", "down"]):
+        match pos:
+            case "up":
+                if self.max > self._count:
+                    self._count += 1
+            case "down":
+                if self.min < self._count:
+                    self._count -= 1
+            case _:
+                raise InvalidCountState(f"'{pos}' is not a posible option")
+
+
+    def _draw_counter_text(self, surface, anchor:str, position: Point):
+        image = self.font.render(f"{self._count}", True, self.text_color)
+        rect = image.get_rect(**{anchor: position})
+        surface.blit(image, rect)
+        return rect
+
+    def draw(self, surface: pygame.Surface, mouse_position: Point):
+        """
+        TODO:
+        - Draw backgound box
+        - Draw text over background box
+        - Create 2 buttons, and pass their event handlers to the outside to
+        be included in the main button eventhandler
+        """
+
+        if not self.enabled:
+            color, text_color = COLOR_BUTTON_DISABLED, COLOR_TEXT_DIM
+        elif self.rect.collidepoint(mouse_position):
+            color, text_color = COLOR_BUTTON_HOVER, COLOR_TEXT
+        else:
+            color, text_color = COLOR_BUTTON, COLOR_TEXT
+
+        background_element = pygame.draw.rect(surface, self.background_color, self.rect, border_radius= 0)
+        pygame.draw.rect(surface, self.background_color, background_element)
+        self._draw_counter_text(surface, anchor= "center", position= (self.rect.x + (self.rect.w - self.button_width)/2, self.rect.y + self.rect.h/2))
+
+        self.button_count_up.draw(surface, mouse_position)
+        self.button_count_down.draw(surface, mouse_position)
+
+        # pygame.draw.rect(surface, color, self.rect, border_radius=self.radius)
+        # draw_text(surface, self.label, font, text_color, self.rect.center)
 
 
 @dataclass(frozen=True)

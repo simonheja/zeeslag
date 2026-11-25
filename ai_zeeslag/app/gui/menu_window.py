@@ -8,6 +8,8 @@ from app.gui.ui_helpers import (
     COLOR_INVALID,
     COLOR_TEXT,
     COLOR_TEXT_DIM,
+    COLOR_TEXT_BLACK,
+    COLOR_TEXT_ORANGE,
     COLOR_VALID,
     COLOR_WATER,
     COLOR_WATER_HOVER,
@@ -15,8 +17,9 @@ from app.gui.ui_helpers import (
     MENU_WINDOW_SIZE,
     WINDOW_MARGIN,
     BoardLayout,
-    Buttons,
+    Button_Event_Handler,
     Button,
+    Spinbox,
     body_font,
     draw_board_labels,
     draw_cross,
@@ -45,13 +48,9 @@ BUTTON_WIDTH = 190
 BUTTON_HEIGHT = 44
 
 class MenuWindow:
-    """Initial screen for selecting the desired game state
+    """Initial screen for selecting the desired game state"""
 
-    Args:
-        pass:pass
-    """
-
-    def __init__(self, *args) -> None:
+    def __init__(self) -> None:
         self._screen: pygame.Surface
         self._background: pygame.Surface | None = None
         self._running = False
@@ -66,17 +65,29 @@ class MenuWindow:
                 Difficulty.EXPERT: Button(pygame.Rect(400-BUTTON_WIDTH/2, 210, BUTTON_WIDTH, BUTTON_HEIGHT), "Expert")
             },
             "ships": {
-                "count_up": Button(pygame.Rect(30, 30, 30, 30), "^"),
+                "count_up": Button(pygame.Rect(30, 30, 30, 30), "^", 2),
                 "count_down": Button(pygame.Rect(30, 60, 30, 30), "v"),
-                "back": Button(pygame.Rect(100-BUTTON_WIDTH/2, 400, BUTTON_WIDTH, BUTTON_HEIGHT), "<< Difficulty"),
-                "continue": Button(pygame.Rect(720-BUTTON_WIDTH/2, 400, BUTTON_WIDTH, BUTTON_HEIGHT), "Start Game")
+                "back": Button(pygame.Rect(100-BUTTON_WIDTH/2, 390, BUTTON_WIDTH, BUTTON_HEIGHT), "<< Difficulty"),
+                "continue": Button(pygame.Rect(720-BUTTON_WIDTH/2, 390, BUTTON_WIDTH, BUTTON_HEIGHT), "Start Game")
             }
         }
 
-        self.button_event_handler = Buttons()
+        self.button_event_handler = Button_Event_Handler()
+        
+        self.spinbox = Spinbox(pygame.Rect(400,300,50,20), self.button_event_handler, "", (255,255,255), (200,200,200))
+        self.spinbox.init_button_events()
+
         self.initialize_buttons()
 
+        
+
     def initialize_buttons(self):
+        """
+        Add buttons to the event listner
+
+        TODO:
+        - buttons are currently detected globaly, make a selector that can disable buttons when they are not drawn to the screen
+        """
         @self.button_event_handler.button_event(self._buttons["difficulty-select"][Difficulty.EASY])
         def set_dificulty_easy():
             self._update_difficulty(Difficulty.EASY)
@@ -161,10 +172,12 @@ class MenuWindow:
             self.killed = True
 
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            # call button event loop
             self.button_event_handler.handle_button_events(event.pos)
 
     def _update_difficulty(self, difficulty:str|None) -> None:
         if difficulty is None:
+            # Reset difficulty
             self._state.selected_dificutly = None
             return
         
@@ -182,42 +195,63 @@ class MenuWindow:
 
 
     def update(self) -> None:
-        state = self._state
-        if state.selected_dificutly != None:
-            pass
+        pass
 
     # ------------------------------------------------------------------ #
     # Drawing
     # ------------------------------------------------------------------ #
+
+    def draw_fps(self) -> None:
+        if getattr(self, "_delta_time", None):
+            draw_text(self._screen, f"FPS: {1/self._delta_time:.0f}", title_font(10), COLOR_VALID, (20, 5))
+
+    def draw_difficulty_bar(self) -> None:
+        match self._state.selected_dificutly:
+            case Difficulty.EASY:
+                draw_text(self._screen, f"Difficulty: {self._state.selected_dificutly}", title_font(40), COLOR_VALID, (400, 25))
+            case Difficulty.NORMAL:
+                draw_text(self._screen, f"Difficulty: {self._state.selected_dificutly}", title_font(40), COLOR_TEXT_BLACK, (400, 25))
+            case Difficulty.HARD:
+                draw_text(self._screen, f"Difficulty: {self._state.selected_dificutly}", title_font(40), COLOR_TEXT_ORANGE, (400, 25))
+            case Difficulty.EXPERT:
+                draw_text(self._screen, f"Difficulty: {self._state.selected_dificutly}", title_font(40), COLOR_HIT, (400, 25))
+            case _:
+                draw_text(self._screen, f"Difficulty: Not Selected", title_font(40), COLOR_TEXT_DIM, (400, 25))
+
     def draw(self) -> None:
         """
         Draw updates
         """
+        # Draw background from image or color
         if self._background is not None:
             self._screen.blit(self._background, (0, 0))
         else:
             self._screen.fill(COLOR_BACKGROUND)
 
+        # Get mouse position
         mouse = pygame.mouse.get_pos()
+
+        # Draw/Update buttons
         self._refresh_buttons(mouse)
 
-        if getattr(self, "_delta_time", None):
-            draw_text(self._screen, f"FPS: {1/self._delta_time:.0f}", title_font(10), COLOR_VALID, (20, 5))
+        self.draw_fps()
 
-        draw_text(self._screen, f"Selected difficulty: {self._state.selected_dificutly}", title_font(40), COLOR_TEXT_DIM, (400, 25))
-        draw_text(self._screen, f"x: {mouse[0]} y: {mouse[1]}", title_font(16), COLOR_HIT, (760, 440))
+        self.draw_difficulty_bar()
+
+        draw_text(self._screen, f"x: {mouse[0]} y: {mouse[1]}", title_font(12), COLOR_TEXT_BLACK, (775, 450))
 
         if self._state.selected_dificutly:
             draw_text(self._screen, f"Amount of ships: {self._state.ship_count}", title_font(16), COLOR_VALID, (200, 60))
 
     def _refresh_buttons(self, mouse:tuple[int,int]) -> None:
-        state = self._state
-        if state.selected_dificutly is None:
+        if self._state.selected_dificutly is None:
             for button in self._buttons["difficulty-select"].values():
                 button.draw(self._screen, mouse)
-        elif state.selected_dificutly and True: # Tempory, no further checks yet
+        elif self._state.selected_dificutly and True: # Tempory, no further checks yet
             for button in self._buttons["ships"].values():
                 button.draw(self._screen, mouse)
+                self.spinbox.draw(self._screen, mouse)
+                
 
 
 if __name__ == "__main__":

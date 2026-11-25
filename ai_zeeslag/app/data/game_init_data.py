@@ -32,9 +32,10 @@ class MenuState:
         if self._ship_config is None or self.ship_count <= 0:
             self._ship_config = []
             self.ship_count = 0
-        
-        self._ship_config.append(ship)
-        self.ship_count += 1
+
+        if self.ship_count < 10:
+            self._ship_config.append(ship)
+            self.ship_count += 1
 
     def remove_ship(self, ship_index:int = -1) -> None:
         if not (self._ship_config is None):
