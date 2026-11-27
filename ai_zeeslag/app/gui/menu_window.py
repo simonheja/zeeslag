@@ -124,7 +124,7 @@ class MenuWindow:
     def state(self) -> GameSettings|None:
         if self._state.complete():
             return GameSettings(
-                self._state.selected_dificutly,
+                self._state.selected_difficulty,
                 Available_AI.DEFAULT,
                 self._state.ship_config
             )
@@ -178,18 +178,18 @@ class MenuWindow:
     def _update_difficulty(self, difficulty:str|None) -> None:
         if difficulty is None:
             # Reset difficulty
-            self._state.selected_dificutly = None
+            self._state.selected_difficulty = None
             return
         
         match difficulty:
             case Difficulty.EASY:
-                self._state.selected_dificutly = Difficulty.EASY
+                self._state.selected_difficulty = Difficulty.EASY
             case Difficulty.NORMAL:
-                self._state.selected_dificutly = Difficulty.NORMAL
+                self._state.selected_difficulty = Difficulty.NORMAL
             case Difficulty.HARD:
-                self._state.selected_dificutly = Difficulty.HARD
+                self._state.selected_difficulty = Difficulty.HARD
             case Difficulty.EXPERT:
-                self._state.selected_dificutly = Difficulty.EXPERT
+                self._state.selected_difficulty = Difficulty.EXPERT
             case _:
                 raise InvalidDifficulty(f"The selected difficulty '{difficulty}' could not be handeld")
 
@@ -206,15 +206,15 @@ class MenuWindow:
             draw_text(self._screen, f"FPS: {1/self._delta_time:.0f}", title_font(10), COLOR_VALID, (20, 5))
 
     def draw_difficulty_bar(self) -> None:
-        match self._state.selected_dificutly:
+        match self._state.selected_difficulty:
             case Difficulty.EASY:
-                draw_text(self._screen, f"Difficulty: {self._state.selected_dificutly}", title_font(40), COLOR_VALID, (400, 25))
+                draw_text(self._screen, f"Difficulty: {self._state.selected_difficulty}", title_font(40), COLOR_VALID, (400, 25))
             case Difficulty.NORMAL:
-                draw_text(self._screen, f"Difficulty: {self._state.selected_dificutly}", title_font(40), COLOR_TEXT_BLACK, (400, 25))
+                draw_text(self._screen, f"Difficulty: {self._state.selected_difficulty}", title_font(40), COLOR_TEXT_BLACK, (400, 25))
             case Difficulty.HARD:
-                draw_text(self._screen, f"Difficulty: {self._state.selected_dificutly}", title_font(40), COLOR_TEXT_ORANGE, (400, 25))
+                draw_text(self._screen, f"Difficulty: {self._state.selected_difficulty}", title_font(40), COLOR_TEXT_ORANGE, (400, 25))
             case Difficulty.EXPERT:
-                draw_text(self._screen, f"Difficulty: {self._state.selected_dificutly}", title_font(40), COLOR_HIT, (400, 25))
+                draw_text(self._screen, f"Difficulty: {self._state.selected_difficulty}", title_font(40), COLOR_HIT, (400, 25))
             case _:
                 draw_text(self._screen, f"Difficulty: Not Selected", title_font(40), COLOR_TEXT_DIM, (400, 25))
 
@@ -240,14 +240,14 @@ class MenuWindow:
 
         draw_text(self._screen, f"x: {mouse[0]} y: {mouse[1]}", title_font(12), COLOR_TEXT_BLACK, (775, 450))
 
-        if self._state.selected_dificutly:
+        if self._state.selected_difficulty:
             draw_text(self._screen, f"Amount of ships: {self._state.ship_count}", title_font(16), COLOR_VALID, (200, 60))
 
     def _refresh_buttons(self, mouse:tuple[int,int]) -> None:
-        if self._state.selected_dificutly is None:
+        if self._state.selected_difficulty is None:
             for button in self._buttons["difficulty-select"].values():
                 button.draw(self._screen, mouse)
-        elif self._state.selected_dificutly and True: # Tempory, no further checks yet
+        elif self._state.selected_difficulty and True: # Tempory, no further checks yet
             for button in self._buttons["ships"].values():
                 button.draw(self._screen, mouse)
                 self.spinbox.draw(self._screen, mouse)
