@@ -31,6 +31,7 @@ from app.gui.ui_helpers import (
     COLOR_VALID,
     COLOR_WATER,
     COLOR_WATER_HOVER,
+    COLOR_BACKGROUND,
     PLAYER_WINDOW_SIZE,
     WINDOW_MARGIN,
     BoardLayout,
@@ -75,6 +76,9 @@ class PlayerWindow:
 
     def __init__(self, game: Game, send_debug: DebugSender | None = None) -> None:
         self._game = game
+
+        # 'lambda message: None' creates an anonymous micro function that always retruns None when it is called
+        # allows the user to submit their own function, otherwise prevent the code from crashing
         self._send_debug = send_debug or (lambda message: None)
         self._screen: pygame.Surface
         self._background: pygame.Surface | None = None
@@ -206,7 +210,7 @@ class PlayerWindow:
         if self._background is not None:
             self._screen.blit(self._background, (0, 0))
         else:
-            self._screen.fill((12, 24, 40))
+            self._screen.fill(COLOR_BACKGROUND)
         self._refresh_buttons()
         mouse = pygame.mouse.get_pos()
 
