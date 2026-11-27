@@ -85,6 +85,8 @@ Dit zijn de algemene regels van het klassieke bordspel, meer kan je **[hier](htt
 | [Miel-Villyn](https://github.com/Miel-VIllyn) | Refactor van het basis startproject | 01/11/2026 |
 | [Miel-Villyn](https://github.com/Miel-VIllyn) | Voorlopige AI door claude voor werking systeem | 01/11/2026 |
 | [Miel-Villyn](https://github.com/Miel-VIllyn) | Boilerplate menu window | 21/11/2026 |
+| [Simon Moyaert](https://github.com/simonheja) | Afwerken en controleren van documentatie | ... |
+| [Simon Moyaert](https://github.com/simonheja) | Maken van presentatie | ... |
 
 
 ## Major commits
