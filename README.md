@@ -14,16 +14,22 @@ Project AI Programming: zeeslag
 
 # Inhoud
 
-- [Doelstellingen](#doelstellingen)
-  - [Spelregels](#spelregels)
-- [Probleemstelling](#probleemstelling)
-- [Analyse](#analyse)
-- [Resultaten](#resultaten)
-- [Uitbreiding](#uitbreiding)
-- [Conclusie](#conclusie)
-- [Bibliografie](#bibliografie)
-- [Taakverdeling](#taakverdeling)
-- [Major commits](#major-commits)
+- [zeeslag](#zeeslag)
+  - [Groepsleden](#groepsleden)
+- [Inhoud](#inhoud)
+  - [Doelstellingen](#doelstellingen)
+    - [Spelregels](#spelregels)
+      - [EEN SCHIP TOT ZINKEN BRENGEN](#een-schip-tot-zinken-brengen)
+      - [DE HELE VLOOT NAAR DE HAAIEN…](#de-hele-vloot-naar-de-haaien)
+      - [HET SPEL](#het-spel)
+  - [Probleemstelling](#probleemstelling)
+  - [Analyse](#analyse)
+  - [Resultaten](#resultaten)
+  - [Uitbreiding](#uitbreiding)
+  - [Conclusie](#conclusie)
+  - [Bibliografie](#bibliografie)
+  - [Taakverdeling](#taakverdeling)
+  - [Major commits](#major-commits)
 
 
 ## Doelstellingen
@@ -60,6 +66,7 @@ Dit zijn de algemene regels van het klassieke bordspel, meer kan je **[hier](htt
 
 - De oorspronkelijke broncode die we hebben gebruik als start is nogal slordig, door gebruik te maken van 1 enkel bestand en een mix van engelse en nederlandse benamingen. Voor dit op te lossen hebben we gebruik gemaakt van [©Claude](https://claude.com) om het volledige starterproject te gaan herschrijven met een duidelijke folderstructuur en leesbare code.
 - De originele game heeft geen mogelijkheid om instellingen aan te passen van de game, daarom heeft [Miel-VIllyn](https://github.com/Miel-VIllyn) een start menu aan de applicatie toegevoegd. De spelers kunnen de moeilijkheidsgraad kiezen en het aantal boten die ze gaan gebruiken.
+- Er zullen ook meerdere AI-modellen als tegenstander mogelijk zijn om te zien hoe elk model presteert bij deze spelomgeving.
 - ...
 
 ## Analyse
