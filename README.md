@@ -14,22 +14,16 @@ Project AI Programming: zeeslag
 
 # Inhoud
 
-- [zeeslag](#zeeslag)
-  - [Groepsleden](#groepsleden)
-- [Inhoud](#inhoud)
-  - [Doelstellingen](#doelstellingen)
-    - [Spelregels](#spelregels)
-      - [EEN SCHIP TOT ZINKEN BRENGEN](#een-schip-tot-zinken-brengen)
-      - [DE HELE VLOOT NAAR DE HAAIEN…](#de-hele-vloot-naar-de-haaien)
-      - [HET SPEL](#het-spel)
-  - [Probleemstelling](#probleemstelling)
-  - [Analyse](#analyse)
-  - [Resultaten](#resultaten)
-  - [Uitbreiding](#uitbreiding)
-  - [Conclusie](#conclusie)
-  - [Bibliografie](#bibliografie)
-  - [Taakverdeling](#taakverdeling)
-  - [Major commits](#major-commits)
+- [Doelstellingen](#doelstellingen)
+  - [Spelregels](#spelregels)
+- [Probleemstelling](#probleemstelling)
+- [Analyse](#analyse)
+- [Resultaten](#resultaten)
+- [Uitbreiding](#uitbreiding)
+- [Conclusie](#conclusie)
+- [Bibliografie](#bibliografie)
+- [Taakverdeling](#taakverdeling)
+- [Major commits](#major-commits)
 
 
 ## Doelstellingen
